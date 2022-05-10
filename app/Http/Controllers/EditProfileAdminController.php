@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\EditProfileAdminRequest;
 use App\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class EditProfileAdminController extends Controller
 {
@@ -22,19 +22,10 @@ class EditProfileAdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditProfileAdminRequest $request, $id)
     {
-        // dd($request->all());
-        $this->validate($request, [
-            'name'=> 'required',
-            'email'=> 'required',
-            'jenis_kelamin'=> 'required',
-            'alamat'=> 'required',
-            'no_hp'=> 'required',
-        ]);
-
         $user = User::find($id);
-        $user->update($request->all());
+        $user->update($request->validated());
 
         return redirect('editprofileadmin');
     }

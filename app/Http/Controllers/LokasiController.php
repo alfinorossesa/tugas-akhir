@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LokasiRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Lokasi;
@@ -35,12 +36,8 @@ class LokasiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LokasiRequest $request)
     {
-        $this->validate($request, [
-            'nama_lokasi'=> 'required'
-        ]);
-
         Lokasi::create([
             'nama_lokasi' => $request->nama_lokasi,
             'slug' => Str::slug($request->nama_lokasi, '-')
@@ -92,9 +89,7 @@ class LokasiController extends Controller
      */
     public function destroy($id)
     {
-        $lokasi = Lokasi::find($id);
-
-        $lokasi->delete();
+        Lokasi::find($id)->delete();
 
         alert()->success('Berhasil Hapus Lokasi','Sukses');
         return redirect()->route('lokasi.index')->with('sukses','Data Brand Berhasil Dihapus');

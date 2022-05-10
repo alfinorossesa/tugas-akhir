@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BrandRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Brand;
@@ -35,12 +36,8 @@ class BrandController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BrandRequest $request)
     {
-        $this->validate($request, [
-            'nama'=> 'required'
-        ]);
-
         Brand::create([
             'nama' => $request->nama,
             'slug' => Str::slug($request->nama, '-')
@@ -80,12 +77,8 @@ class BrandController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BrandRequest $request, $id)
     {
-        $this->validate($request, [
-            'nama'=> 'required'
-        ]);
-
         $brand = Brand::find($id);
         $brand->update($request->all());
 
@@ -101,9 +94,7 @@ class BrandController extends Controller
      */
     public function destroy($id)
     {
-        $brand = Brand::find($id);
-
-        $brand->delete();
+        Brand::find($id)->delete();
 
         alert()->success('Berhasil Hapus Brand','Sukses');
         return redirect()->route('brand.index')->with('sukses','Data Brand Berhasil Dihapus');

@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Brand;
 use App\Models\Produk;
 use App\Models\Lokasi;
-use App\User;
 use File;
-use Auth;
-use Alert;
+use App\Http\Requests\ProdukRequest;
 
 class ProdukController extends Controller
 {
@@ -44,21 +41,8 @@ class ProdukController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProdukRequest $request)
     {
-        // dd($request->all());
-        $this->validate($request, [
-            'nama_produk'=> 'required',
-            'brand_id'=> 'required',
-            'stok'=> 'required',
-            'deskripsi'=> 'required',
-            'harga'=> 'required',
-            'lokasi_id'=> 'required',
-            'foto_produk' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-     
-        $userId = Auth::user()->id;
-        
         $foto = $request->file('foto_produk');
         $nama_foto = time()."_".$foto->getClientOriginalName();
         $foto->move('img/produk',$nama_foto);
@@ -66,7 +50,7 @@ class ProdukController extends Controller
         Produk::create([
             'nama_produk' => $request->nama_produk,
             'brand_id' => $request->brand_id,
-            'user_id' => $userId,
+            'user_id' => auth()->user()->id,
             'stok' => $request->stok,
             'deskripsi' => $request->deskripsi,
             'harga'=> $request->harga,
@@ -110,19 +94,8 @@ class ProdukController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProdukRequest $request, $id)
     {
-        // dd($request->all());
-        $this->validate($request, [
-            'nama_produk'=> 'required',
-            'brand_id'=> 'required',
-            'stok'=> 'required',
-            'deskripsi'=> 'required',
-            'harga'=> 'required',
-            'lokasi_id'=> 'required',
-            'foto_produk' => 'file|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-
         $produk = Produk::find($id);
         $produk->update($request->all());
         // // update foto            

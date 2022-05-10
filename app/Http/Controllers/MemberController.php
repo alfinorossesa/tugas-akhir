@@ -20,9 +20,7 @@ class MemberController extends Controller
 
     public function destroy($id)
     {
-        $users = User::find($id);
-
-        $users->delete();
+        User::find($id)->delete();
 
         alert()->success('Berhasil Hapus Member','Sukses');
         return redirect()->route('member.index')->with('sukses','Data Brand Berhasil Dihapus');

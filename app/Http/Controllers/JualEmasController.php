@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\JualEmasRequest;
 use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\Brand;
 use App\Models\Lokasi;
-use File;
-use Auth;
 
 class JualEmasController extends Controller
 {
@@ -43,20 +42,8 @@ class JualEmasController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(JualEmasRequest $request)
     {
-        $this->validate($request, [
-            'nama_produk'=> 'required',
-            'brand_id'=> 'required',
-            'stok'=> 'required',
-            'deskripsi'=> 'required',
-            'harga'=> 'required',
-            'lokasi_id'=> 'required',
-            'foto_produk' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-     
-        $userId = Auth::user()->id;
-        
         $foto = $request->file('foto_produk');
         $nama_foto = time()."_".$foto->getClientOriginalName();
         $foto->move('img/produk',$nama_foto);
@@ -64,7 +51,7 @@ class JualEmasController extends Controller
         Produk::create([
             'nama_produk' => $request->nama_produk,
             'brand_id' => $request->brand_id,
-            'user_id' => $userId,
+            'user_id' => auth()->user()->id,
             'stok' => $request->stok,
             'deskripsi' => $request->deskripsi,
             'harga'=> $request->harga,
